@@ -124,7 +124,18 @@ Offer:
         contents=prompt
     )
 
-    ai_result = json.loads(response.text)
+    raw_text = response.text.strip()
+    print("AI RAW RESPONSE:", raw_text)
+
+    try:
+        ai_result = json.loads(raw_text)
+    except json.JSONDecodeError:
+        ai_result = {
+            "verdict": "SUSPICIOUS",
+            "risk_score": 50,
+            "reasons": ["AI response could not be parsed reliably"]
+        }
+
 
     verdict = ai_result["verdict"]
     risk_score = ai_result["risk_score"]
